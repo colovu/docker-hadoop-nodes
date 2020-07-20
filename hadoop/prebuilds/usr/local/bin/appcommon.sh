@@ -24,6 +24,7 @@ docker_app_env() {
     cat <<"EOF"
 # Common Settings
 export ENV_DEBUG=${ENV_DEBUG:-false}
+export USER=hadoop
 
 # Paths
 export APP_DATA_DIR=${HDFS_DATA_DIR:-${APP_DATA_DIR}}
@@ -34,11 +35,23 @@ export HADOOP_MAPRED_HOME=${HADOOP_HOME}
 export HADOOP_COMMON_HOME=${HADOOP_HOME}
 export HADOOP_HDFS_HOME=${HADOOP_HOME}
 export HADOOP_YARN_HOME=${HADOOP_HOME}
+export YARN_HOME=${HADOOP_HOME}
 export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native
 export HADOOP_LIBEXEC_DIR=${HADOOP_HOME}/libexec
+export HADOOP_INSTALL=${HADOOP_HOME}
 
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-${APP_CONF_DIR}}
 export HADOOP_LOG_DIR=${HADOOP_LOG_DIR:-${APP_LOG_DIR}}
+
+export CORE_CONF_hadoop_tmp_dir=${CORE_CONF_hadoop_tmp_dir:-${APP_DATA_DIR}/hadoop/tmp}
+
+export HDFS_CONF_dfs_namenode_name_dir=${HDFS_CONF_dfs_namenode_name_dir:-${APP_DATA_DIR}/dfs/namenode}
+export HDFS_CONF_dfs_datanode_data_dir=${HDFS_CONF_dfs_datanode_data_dir:-${APP_DATA_DIR}/dfs/datanode}
+export HDFS_CONF_dfs_journalnode_edits_dir=${HDFS_CONF_dfs_journalnode_edits_dir:-${APP_DATA_DIR}/dfs/journal}
+export YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path=${YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path:-${APP_DATA_DIR}/yarn/timeline}
+export MAPRED_CONF_mapreduce_jobhistory_done___dir=${MAPRED_CONF_mapreduce_jobhistory_done___dir:-${APP_DATA_DIR}/mapreduce/done}
+export MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir=${MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir:-${APP_DATA_DIR}/mapreduce/tmp}
+
 
 export HADOOP_TMP_DIR=${CORE_CONF_hadoop_tmp_dir:-${APP_DATA_DIR}/hadoop/tmp}
 export HDFS_NAMENODE_DATA_DIR=${HDFS_CONF_dfs_namenode_name_dir:-${APP_DATA_DIR}/dfs/namenode}
@@ -47,6 +60,11 @@ export HDFS_JOURNALNODE_DATA_DIR=${HDFS_CONF_dfs_journalnode_edits_dir:-${APP_DA
 export YARN_TIMELINE_DATA_DIR=${YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path:-${APP_DATA_DIR}/yarn/timeline}
 export MAPRED_JOBHISTORY_DONE_DATA_DIR=${MAPRED_CONF_mapreduce_jobhistory_done___dir:-${APP_DATA_DIR}/mapreduce/done}
 export MAPRED_JOBHISTORY_TMP_DATA_DIR=${MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir:-${APP_DATA_DIR}/mapreduce/tmp}
+
+export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native" 
+
+
+
 
 # Users
 export APP_USER="${HADOOP_DAEMON_USER:-${APP_USER}}"
@@ -415,11 +433,11 @@ docker_app_init() {
         # 根据环境变量生成默认配置文件
         hadoop_generate_conf
 
-        if is_boolean_yes "${MULTIHOMED_NETWORK}" ;then
+        if is_boolean_yes "${MULTIHOMED_NETWORK:-1}" ;then
             hadoop_multihome_network_conf
         fi
 
-        [ -n "${GANGLIA_HOST}" ] && hadoop_ganglia_host_conf
+        [ -n "${GANGLIA_HOST:-}" ] && hadoop_ganglia_host_conf
 
         touch ${APP_CONF_DIR}/.app_init_flag
         echo "$(date '+%Y-%m-%d %H:%M:%S') : Init success." >> ${APP_CONF_DIR}/.app_init_flag
@@ -439,7 +457,7 @@ docker_app_init() {
     fi
 
     # 获取依赖外部服务信息，去除配置信息中可能存在的双引号'"'，并进行服务状态检测
-    for i in `echo ${SERVICE_PRECONDITION} | sed -e 's/^\"//' -e 's/\"$//'`; do
+    for i in `echo ${SERVICE_PRECONDITION:-} | sed -e 's/^\"//' -e 's/\"$//'`; do
         app_wait_service "${i}"
     done
 }

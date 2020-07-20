@@ -10,6 +10,8 @@ services:
     image: colovu/hadoop-namenode:3.2
     container_name: namenode
     restart: always
+    networks:
+      - back-tier
     ports:
       - 9870:9870
       - 9000:9000
@@ -26,6 +28,8 @@ services:
     image: colovu/hadoop-datanode:3.2
     container_name: datanode
     restart: always
+    networks:
+      - back-tier
     volumes:
     # 会自动创建 data 子目录
       - $PWD/conf:/srv/conf
@@ -39,6 +43,10 @@ services:
     image: colovu/hadoop-resourcemanager:3.2
     container_name: resourcemanager
     restart: always
+    networks:
+      - back-tier
+    ports:
+      - 8088:8088
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
     env_file:
@@ -48,6 +56,8 @@ services:
     image: colovu/hadoop-nodemanager:3.2
     container_name: nodemanager
     restart: always
+    networks:
+      - back-tier
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
     env_file:
@@ -57,6 +67,10 @@ services:
     image: colovu/hadoop-historyserver:3.2
     container_name: historyserver
     restart: always
+    networks:
+      - back-tier
+    ports:
+      - 8188:8188
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
     volumes:
@@ -65,6 +79,11 @@ services:
       - $PWD/data:/srv/data
     env_file:
       - ./hadoop.env
+
+
+networks:
+  back-tier:
+    driver: bridge
 
 # 指定容器使用的数据卷映射配置信息，使用默认配置时，可以省略
 #volumes:
