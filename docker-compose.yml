@@ -1,0 +1,72 @@
+version: "3"
+
+# 说明：
+#   - 以 '$PWD' 开头的目录（如'$PWD/conf'），为当前目录下对应的目录，供容器持久化数据存储；可以使用绝对路径；运行前需要保证目录已经存在
+#   - hadoop.env 为镜像实例化为容器时，使用的配置参数，对所有使用'env_file'指定该文件的容器有效；使用文件方式，简化启动配置信息
+#   - 使用 'port' 定义的端口，可以使用宿主机 'IP:Port' 直接访问；定义方式为 '宿主机Port:容器内Port'
+
+services:
+  namenode:
+    image: colovu/hadoop-namenode:3.2
+    container_name: namenode
+    restart: always
+    ports:
+      - 9870:9870
+      - 9000:9000
+    volumes:
+    # 会自动创建 name 子目录
+      - $PWD/conf:/srv/conf
+      - $PWD/data:/srv/data
+    environment:
+      - HADOOP_CLUSTER_NAME=colovu
+    env_file:
+      - ./hadoop.env
+
+  datanode:
+    image: colovu/hadoop-datanode:3.2
+    container_name: datanode
+    restart: always
+    volumes:
+    # 会自动创建 data 子目录
+      - $PWD/conf:/srv/conf
+      - $PWD/data:/srv/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+    env_file:
+      - ./hadoop.env
+  
+  resourcemanager:
+    image: colovu/hadoop-resourcemanager:3.2
+    container_name: resourcemanager
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
+    env_file:
+      - ./hadoop.env
+
+  nodemanager:
+    image: colovu/hadoop-nodemanager:3.2
+    container_name: nodemanager
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+    env_file:
+      - ./hadoop.env
+  
+  historyserver:
+    image: colovu/hadoop-historyserver:3.2
+    container_name: historyserver
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+    volumes:
+    # 会自动创建 yarn 子目录
+      - $PWD/conf:/srv/conf
+      - $PWD/data:/srv/data
+    env_file:
+      - ./hadoop.env
+
+# 指定容器使用的数据卷映射配置信息，使用默认配置时，可以省略
+#volumes:
+#  $PWD/conf:
+#  $PWD/data:
