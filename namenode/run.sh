@@ -9,8 +9,10 @@ if [ -z "${HADOOP_CLUSTER_NAME}" ]; then
   exit 2
 fi
 
-echo "remove lost+found from ${HDFS_NAMENODE_DATA_DIR}"
-rm -r ${HDFS_NAMENODE_DATA_DIR}/lost+found
+if [ -e ${HDFS_NAMENODE_DATA_DIR}/lost+found ]; then
+	echo "remove lost+found from ${HDFS_NAMENODE_DATA_DIR}"
+	rm -r ${HDFS_NAMENODE_DATA_DIR}/lost+found
+fi
 
 if [ "`ls -A ${HDFS_NAMENODE_DATA_DIR}`" == "" ]; then
   echo "Formatting namenode name directory: ${HDFS_NAMENODE_DATA_DIR}"
