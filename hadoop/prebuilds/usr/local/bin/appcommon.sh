@@ -72,8 +72,8 @@ export APP_GROUP="${HADOOP_DAEMON_GROUP:-${APP_GROUP}}"
 
 # Application settings
 export CORE_CONF_fs_defaultFS=${CORE_CONF_fs_defaultFS:-hdfs://`hostname -f`:9000}
-export MAPRED_CONF_mapreduce_application_classpath=${MAPRED_CONF_mapreduce_application_classpath:-${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/*,${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/lib/*}
-export YARN_CONF_yarn_application_classpath=${YARN_CONF_yarn_application_classpath:-${HADOOP_YARN_HOME}/share/hadoop/yarn/*,${HADOOP_YARN_HOME}/share/hadoop/yarn/lib/*}
+export MAPRED_CONF_mapreduce_application_classpath=${MAPRED_CONF_mapreduce_application_classpath:-${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/*:${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/lib/*}
+export YARN_CONF_yarn_application_classpath=${YARN_CONF_yarn_application_classpath:-${HADOOP_YARN_HOME}/share/hadoop/yarn/*:${HADOOP_YARN_HOME}/share/hadoop/yarn/lib/*}
 
 export MULTIHOMED_NETWORK=${MULTIHOMED_NETWORK:-1}
 
@@ -120,19 +120,19 @@ hadoop_configure_from_environment() {
     #    value="${!var}"
     #    hadoop_common_xml_set "${path}"  "${key}" "${value}"
     #done
-    #for var in $(printenv | grep ${envPrefix} | ${!${envPrefix}_@}); do
-    #    LOG_D "  Process: ${var}"
-    #    key="$(echo "${var}" | sed -e 's/^${envPrefix}_//g' -e 's/___/-/g' -e 's/__/_/g' -e 's/_/\./g' )"
-    #    value="${!var}"
-    #    hadoop_common_xml_set "${path}" "${key}" "${value}"
-    #done
-    for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=${envPrefix}`; do 
-        name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g;'`
-        key="${envPrefix}_${c}"
-        #LOG_D "  Process: ${key} => ${!key}"
-        value="${!key}"
-        hadoop_common_xml_set "${path}" "${name}" "${value}"
+    for var in $(printenv | grep ${envPrefix}); do
+        LOG_D "  Process: ${var}"
+        key="$(echo "${var}" | sed -e 's/^${envPrefix}_//g' -e 's/___/-/g' -e 's/__/_/g' -e 's/_/\./g' )"
+        value="${!var}"
+        hadoop_common_xml_set "${path}" "${key}" "${value}"
     done
+    #for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=${envPrefix}`; do 
+    #    name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g;'`
+    #    key="${envPrefix}_${c}"
+    #    #LOG_D "  Process: ${key} => ${!key}"
+    #    value="${!key}"
+    #    hadoop_common_xml_set "${path}" "${name}" "${value}"
+    #done
 }
 
 # 将变量配置更新至配置文件
