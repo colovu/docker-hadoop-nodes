@@ -120,19 +120,19 @@ hadoop_configure_from_environment() {
     #    value="${!var}"
     #    hadoop_common_xml_set "${path}"  "${key}" "${value}"
     #done
-    for var in $(printenv | grep ${envPrefix}); do
-        LOG_D "  Process: ${var}"
-        key="$(echo "${var}" | sed -e 's/^${envPrefix}_//g' -e 's/___/-/g' -e 's/__/_/g' -e 's/_/\./g' )"
-        value="${!var}"
-        hadoop_common_xml_set "${path}" "${key}" "${value}"
-    done
-    #for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=${envPrefix}`; do 
-    #    name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g;'`
-    #    key="${envPrefix}_${c}"
-    #    #LOG_D "  Process: ${key} => ${!key}"
-    #    value="${!key}"
-    #    hadoop_common_xml_set "${path}" "${name}" "${value}"
+    #for var in $(printenv | grep ${envPrefix}); do
+    #    LOG_D "  Process: ${var}"
+    #    key="$(echo "${var}" | sed -e 's/^${envPrefix}_//g' -e 's/___/-/g' -e 's/__/_/g' -e 's/_/\./g' )"
+    #    value="${!var}"
+    #    hadoop_common_xml_set "${path}" "${key}" "${value}"
     #done
+    for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=${envPrefix}`; do 
+        name=`echo ${c} | perl -pe 's/___/-/g; s/__/_/g; s/_/./g;'`
+        key="${envPrefix}_${c}"
+        #LOG_D "  Process: ${key} => ${!key}"
+        value="${!key}"
+        hadoop_common_xml_set "${path}" "${name}" "${value}"
+    done
 }
 
 # 将变量配置更新至配置文件
