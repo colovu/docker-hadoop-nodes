@@ -1,6 +1,7 @@
 # Ver: 1.0 by Endial Fang (endial@126.com)
 #
 # 指定原始系统镜像，常用镜像为 colovu/ubuntu:18.04、colovu/debian:10、colovu/alpine:3.12、colovu/openjdk:8u252-jre
+FROM colovu/openjdk:8u252-jre
 
 # ARG参数使用"--build-arg"指定，如 "--build-arg apt_source=tencent"
 # sources.list 可使用版本：default / tencent / ustc / aliyun / huawei
