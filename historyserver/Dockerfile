@@ -1,6 +1,6 @@
 # Ver: 1.0 by Endial Fang (endial@126.com)
 #
-FROM colovu/hadoop:3.3
+FROM colovu/hadoop:latest
 
 HEALTHCHECK CMD curl -f http://localhost:8188/ || exit 1
 

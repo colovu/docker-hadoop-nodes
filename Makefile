@@ -11,7 +11,7 @@ build-arg := --build-arg apt_source=tencent
 local_ip=`ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $$2}'|tr -d "addr:"`
 build-arg += --build-arg local_url=http://$(local_ip)/dist-files/
 
-current_branch := 3.3
+current_branch := latest
 build:
 	docker rmi colovu/hadoop:$(current_branch) colovu/hadoop-namenode:$(current_branch) colovu/hadoop-datanode:$(current_branch) || true
 	docker rmi colovu/hadoop-resourcemanager:$(current_branch) colovu/hadoop-nodemanager:$(current_branch) colovu/hadoop-historyserver:$(current_branch) || true
@@ -51,13 +51,13 @@ clean:
 
 # 以 /tmp/conf 及 /tmp/data 映射并启动集群后（至少 namenode 及 datanode）
 # 
-# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:3.2 hdfs dfs -mkdir -p /input/
-# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:3.2 hdfs dfs -copyFromLocal -f /srv/data/hadoop/README.md /input/
-# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:3.2 hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar wordcount /input /output
-# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:3.2 hdfs dfs -cat /output/*
-# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:3.2 hdfs dfs -rm -r /output
+# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:latest hdfs dfs -mkdir -p /input/
+# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:latest hdfs dfs -copyFromLocal -f /srv/data/hadoop/README.md /input/
+# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:latest hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar wordcount /input /output
+# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:latest hdfs dfs -cat /output/*
+# docker run --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:latest hdfs dfs -rm -r /output
 # 
-# docker run -it --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:3.2 /bin/bash
+# docker run -it --network back-tier -v /tmp/conf:/srv/conf -v /tmp/data:/srv/data --env-file hadoop.env colovu/hadoop:latest /bin/bash
 #   hdfs dfs -mkdir -p /input
 #   hdfs dfs -copyFromLocal /srv/data/hadoop/README.md /input/
 #   cd /usr/local/hadoop/share/hadoop/mapreduce
