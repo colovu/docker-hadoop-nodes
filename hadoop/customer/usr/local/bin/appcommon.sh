@@ -10,6 +10,7 @@
 . /usr/local/scripts/libos.sh
 . /usr/local/scripts/libservice.sh
 . /usr/local/scripts/libvalidations.sh
+. /usr/local/scripts/libnet.sh
 
 # 函数列表
 
@@ -27,10 +28,7 @@ export ENV_DEBUG=${ENV_DEBUG:-false}
 export USER=hadoop
 
 # Paths
-export APP_DATA_DIR=${HDFS_DATA_DIR:-${APP_DATA_DIR}}
-
-export HADOOP_HOME=${APP_BASE_DIR}
-export HADOOP_PREFIX=${APP_BASE_DIR}
+export HADOOP_HOME=${APP_HOME_DIR}
 export HADOOP_MAPRED_HOME=${HADOOP_HOME}
 export HADOOP_COMMON_HOME=${HADOOP_HOME}
 export HADOOP_HDFS_HOME=${HADOOP_HOME}
@@ -52,7 +50,6 @@ export YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path=${YARN_
 export MAPRED_CONF_mapreduce_jobhistory_done___dir=${MAPRED_CONF_mapreduce_jobhistory_done___dir:-${APP_DATA_DIR}/mapreduce/done}
 export MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir=${MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir:-${APP_DATA_DIR}/mapreduce/tmp}
 
-
 export HADOOP_TMP_DIR=${CORE_CONF_hadoop_tmp_dir:-${APP_DATA_DIR}/hadoop/tmp}
 export HDFS_NAMENODE_DATA_DIR=${HDFS_CONF_dfs_namenode_name_dir:-${APP_DATA_DIR}/dfs/namenode}
 export HDFS_DATANODE_DATA_DIR=${HDFS_CONF_dfs_datanode_data_dir:-${APP_DATA_DIR}/dfs/datanode}
@@ -63,12 +60,7 @@ export MAPRED_JOBHISTORY_TMP_DATA_DIR=${MAPRED_CONF_mapreduce_jobhistory_interme
 
 export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native" 
 
-
-
-
 # Users
-export APP_USER="${HADOOP_DAEMON_USER:-${APP_USER}}"
-export APP_GROUP="${HADOOP_DAEMON_GROUP:-${APP_GROUP}}"
 
 # Application settings
 export CORE_CONF_fs_defaultFS=${CORE_CONF_fs_defaultFS:-hdfs://`hostname -f`:9000}
@@ -333,7 +325,7 @@ hadoop_configure_heap_size() {
     fi
 }
 
-# 检测依赖的服务端口是否就绪；该脚本依赖系统工具 netcat
+# 检测依赖的服务端口是否就绪；该脚本依赖系统工具 'netcat'
 # 参数:
 #   $1 - host:port
 app_wait_service() {
