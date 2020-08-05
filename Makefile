@@ -11,7 +11,7 @@ build-arg := --build-arg apt_source=tencent
 local_ip=`ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $$2}'|tr -d "addr:"`
 build-arg += --build-arg local_url=http://$(local_ip)/dist-files/
 
-current_branch := 3.2
+current_branch := 3.3
 build:
 	docker rmi colovu/hadoop:$(current_branch) colovu/hadoop-namenode:$(current_branch) colovu/hadoop-datanode:$(current_branch) || true
 	docker rmi colovu/hadoop-resourcemanager:$(current_branch) colovu/hadoop-nodemanager:$(current_branch) colovu/hadoop-historyserver:$(current_branch) || true
@@ -61,4 +61,4 @@ clean:
 #   hdfs dfs -mkdir -p /input
 #   hdfs dfs -copyFromLocal /srv/data/hadoop/README.md /input/
 #   cd /usr/local/hadoop/share/hadoop/mapreduce
-#   hadoop jar hadoop-mapreduce-examples-3.2.1.jar wordcount /input /output
+#   hadoop jar hadoop-mapreduce-examples-3.3.0.jar wordcount /input /output

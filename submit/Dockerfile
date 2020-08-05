@@ -1,6 +1,6 @@
 # Ver: 1.0 by Endial Fang (endial@126.com)
 #
-FROM colovu/hadoop:3.2
+FROM colovu/hadoop:3.3
 
 COPY WordCount.jar /opt/hadoop/applications/WordCount.jar
 

@@ -1,14 +1,14 @@
 # Ver: 1.0 by Endial Fang (endial@126.com)
 #
 # 指定原始系统镜像，常用镜像为 colovu/ubuntu:18.04、colovu/debian:10、colovu/alpine:3.12、colovu/openjdk:8u252-jre
-FROM colovu/openjdk:8u252-jre
+FROM colovu/openjdk:11-jre
 
 # ARG参数使用"--build-arg"指定，如 "--build-arg apt_source=tencent"
 # sources.list 可使用版本：default / tencent / ustc / aliyun / huawei
 ARG apt_source=default
 
 # 外部指定应用版本信息，如 "--build-arg app_ver=6.0.0"
-ARG app_ver=3.2.1
+ARG app_ver=3.3.0
 
 # 编译镜像时指定本地服务器地址，如 "--build-arg local_url=http://172.29.14.108/dist-files/"
 ARG local_url=""
