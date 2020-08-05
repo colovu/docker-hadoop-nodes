@@ -174,7 +174,6 @@ COPY customer /
 RUN set -eux; \
 # 设置容器入口脚本的可执行权限
 	chmod +x /usr/local/bin/entrypoint.sh; \
-	chmod +x /usr/local/bin/run.sh; \
 	\
 # 检测是否存在对应版本的 overrides 脚本文件；如果存在，执行
 	{ [ ! -e "/usr/local/overrides/overrides-${app_ver}.sh" ] || /bin/bash "/usr/local/overrides/overrides-${app_ver}.sh"; }; \
