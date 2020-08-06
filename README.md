@@ -38,8 +38,8 @@ $ docker-compose up -d
 
 ### 端口
 
-- 9000：Namenode Web 端口
-- 9870：Namenode 服务监听端口
+- 9000：Namenode 服务监听端口
+- 9870：Namenode Web 服务端口
 - 9864：DataNode 服务监听端口
 - 8088：ResourceManager Web 端口
 - 8188：HistoryManager Web 端口
