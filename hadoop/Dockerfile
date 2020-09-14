@@ -66,7 +66,7 @@ RUN set -eux; \
 	rm -rf /usr/local/${APP_NAME}-${APP_VERSION}/share/doc/*;
 
 # 镜像生成 ========================================================================
-FROM colovu/openjre:1.8-deb
+FROM colovu/openjre:1.8
 
 ARG apt_source=default
 ARG local_url=""
