@@ -1,12 +1,11 @@
 # Ver: 1.0 by Endial Fang (endial@126.com)
 #
-FROM colovu/hadoop:3.3
+FROM colovu/hadoop:latest-deb
 
 # 应用健康状态检查
-HEALTHCHECK CMD curl -f http://localhost:9864/ || exit 1
+HEALTHCHECK CMD wget -O- -q http://localhost:9864/ || exit 1
 
-COPY run.sh /usr/local/bin/
-RUN chmod a+x /usr/local/bin/run.sh
+COPY customer /
 
 EXPOSE 9864
 

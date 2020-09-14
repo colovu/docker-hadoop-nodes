@@ -1,13 +1,12 @@
 # Ver: 1.0 by Endial Fang (endial@126.com)
 #
-FROM colovu/hadoop:latest
+FROM colovu/hadoop:latest-deb
 
-HEALTHCHECK CMD curl -f http://localhost:8188/ || exit 1
+HEALTHCHECK CMD wget -O- -q http://localhost:8188/ || exit 1
 
 ENV YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path=/srv/data/hadoop/yarn/timeline
 
-COPY run.sh /usr/local/bin/
-RUN chmod a+x /usr/local/bin/run.sh
+COPY customer /
 
 EXPOSE 8188
 

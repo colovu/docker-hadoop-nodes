@@ -7,7 +7,7 @@ version: '3.8'
 
 services:
   namenode:
-    image: colovu/hadoop-namenode
+    image: colovu/hadoop-namenode:latest-alpine
     hostname: namenode
     restart: always
     networks:
@@ -24,7 +24,7 @@ services:
       - ./hadoop.env
 
   datanode:
-    image: colovu/hadoop-datanode
+    image: colovu/hadoop-datanode:latest-alpine
     hostname: datanode
     restart: always
     networks:
@@ -38,7 +38,7 @@ services:
       - ./hadoop.env
   
   resourcemanager:
-    image: colovu/hadoop-resourcemanager
+    image: colovu/hadoop-resourcemanager:latest-alpine
     container_name: resourcemanager
     restart: always
     networks:
@@ -51,7 +51,7 @@ services:
       - ./hadoop.env
 
   nodemanager:
-    image: colovu/hadoop-nodemanager
+    image: colovu/hadoop-nodemanager:latest-alpine
     container_name: nodemanager
     restart: always
     networks:
@@ -62,7 +62,7 @@ services:
       - ./hadoop.env
   
   historyserver:
-    image: colovu/hadoop-historyserver
+    image: colovu/hadoop-historyserver:latest-alpine
     container_name: historyserver
     restart: always
     networks:
