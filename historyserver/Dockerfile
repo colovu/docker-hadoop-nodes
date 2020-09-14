@@ -1,6 +1,6 @@
 # Ver: 1.0 by Endial Fang (endial@126.com)
 #
-FROM colovu/hadoop:latest-deb
+FROM colovu/hadoop:latest
 
 HEALTHCHECK CMD wget -O- -q http://localhost:8188/ || exit 1
 
