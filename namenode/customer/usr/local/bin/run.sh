@@ -2,7 +2,7 @@
 
 . /usr/local/bin/appcommon.sh			# 应用专用函数库
 
-eval "$(docker_app_env)"
+eval "$(app_env)"
 
 if [ -z "${HADOOP_CLUSTER_NAME}" ]; then
   echo "Cluster name not specified"

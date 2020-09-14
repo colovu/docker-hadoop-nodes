@@ -8,11 +8,12 @@
 
 **版本信息**：
 
-- 3.2、3.2.1、latest
+- 3.3、latest
+- 3.2
 
 **镜像信息**
 
-* 镜像地址：colovu/hadoop:latest
+* 镜像地址：colovu/hadoop:3.2
 
 
 
@@ -23,7 +24,6 @@ Docker-Compose 快速启动命令：
 ```shell
 $ curl -sSL https://raw.githubusercontent.com/colovu/docker-hadoop/master/docker-compose.yml > docker-compose.yml
 
-$ mkdir -p ./conf ./data
 $ docker-compose up -d
 ```
 
@@ -48,9 +48,9 @@ $ docker-compose up -d
 镜像默认提供以下数据卷定义，默认数据分别存储在自动生成的应用名对应`Hadoop`子目录中：
 
 ```shell
-/var/log			# Hadoop 日志文件
-/srv/conf			# Hadoop 配置文件
-/srv/data			# Hadoop 数据文件
+/var/log                # Hadoop 日志文件
+/srv/conf               # Hadoop 配置文件
+/srv/data               # Hadoop 数据文件
 ```
 
 如果需要持久化存储相应数据，需要**在宿主机建立本地目录**，并在使用镜像初始化容器时进行映射。宿主机相关的目录中如果不存在对应应用的子目录或相应数据文件，则容器会在初始化时创建相应目录及文件。
@@ -154,7 +154,8 @@ Hadoop 应用的参数通过设置**环境变量**的方式设置。格式为 **
 
 ## 更新记录
 
-- 3.2、latest
+- 3.3、latest
+- 3.2
 
 
 

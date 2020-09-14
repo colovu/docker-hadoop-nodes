@@ -1,4 +1,4 @@
-version: '3.6'
+version: '3.8'
 
 # 说明：
 #   - 以 '$PWD' 开头的目录（如'$PWD/conf'），为当前目录下对应的目录，供容器持久化数据存储；可以使用绝对路径；运行前需要保证目录已经存在
@@ -16,8 +16,8 @@ services:
       - 9870:9870
       - 9000:9000
     volumes:
-      - $PWD/conf:/srv/conf
-      - $PWD/data:/srv/data
+      - app_conf:/srv/conf
+      - app_data:/srv/data
     environment:
       - HADOOP_CLUSTER_NAME=colovu
     env_file:
@@ -30,8 +30,8 @@ services:
     networks:
       - back-tier
     volumes:
-      - $PWD/conf:/srv/conf
-      - $PWD/data:/srv/data
+      - app_conf:/srv/conf
+      - app_data:/srv/data
     environment:
       - SERVICE_PRECONDITION="namenode:9870"
     env_file:
@@ -72,8 +72,8 @@ services:
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
     volumes:
-      - $PWD/conf:/srv/conf
-      - $PWD/data:/srv/data
+      - app_conf:/srv/conf
+      - app_data:/srv/data
     env_file:
       - ./hadoop.env
 
@@ -82,7 +82,12 @@ networks:
   back-tier:
     external: true
 
-# 指定容器使用的数据卷映射配置信息，使用默认配置时，可以省略
-#volumes:
-#  $PWD/conf:
-#  $PWD/data:
+# 定义本地数据卷，由系统管理，需要手动删除
+volumes:
+  app_conf:
+    driver: local
+  app_data:
+    driver: local
+  app_datalog:
+    driver: local
+

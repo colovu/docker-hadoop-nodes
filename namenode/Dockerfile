@@ -3,10 +3,9 @@
 FROM colovu/hadoop:3.2
 
 # 应用健康状态检查
-HEALTHCHECK CMD curl -f http://localhost:9870/ || exit 1
+HEALTHCHECK CMD wget -O- -q http://localhost:9870/ || exit 1
 
-COPY run.sh /usr/local/bin/
-RUN chmod a+x /usr/local/bin/run.sh
+COPY customer /
 
 EXPOSE 9000 9870
 

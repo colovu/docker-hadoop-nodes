@@ -2,6 +2,6 @@
 
 . /usr/local/bin/appcommon.sh			# 应用专用函数库
 
-eval "$(docker_app_env)"
+eval "$(app_env)"
 
-yarn --config ${APP_CONF_DIR} nodemanager
+hdfs --config ${APP_CONF_DIR} journalnode

@@ -2,6 +2,6 @@
 
 . /usr/local/bin/appcommon.sh			# 应用专用函数库
 
-eval "$(docker_app_env)"
+eval "$(app_env)"
 
-hadoop jar $JAR_FILEPATH $CLASS_TO_RUN $PARAMS
+hdfs --config ${APP_CONF_DIR} datanode

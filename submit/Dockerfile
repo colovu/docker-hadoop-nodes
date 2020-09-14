@@ -8,8 +8,7 @@ ENV JAR_FILEPATH="/opt/hadoop/applications/WordCount.jar"
 ENV CLASS_TO_RUN="WordCount"
 ENV PARAMS="/input /output"
 
-COPY run.sh /usr/local/bin/
-RUN chmod a+x /usr/local/bin/run.sh
+COPY customer /
 
 EXPOSE 9000 9870
 

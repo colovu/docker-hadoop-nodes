@@ -5,12 +5,12 @@
 
 # 加载依赖脚本
 . /usr/local/scripts/libcommon.sh       # 通用函数库
+
 . /usr/local/scripts/libfile.sh
 . /usr/local/scripts/libfs.sh
 . /usr/local/scripts/libos.sh
 . /usr/local/scripts/libservice.sh
 . /usr/local/scripts/libvalidations.sh
-. /usr/local/scripts/libnet.sh
 
 # 函数列表
 
@@ -21,59 +21,57 @@
 #   *_* : 应用配置文件使用的全局变量，变量名根据配置项定义
 # 返回值:
 #   可以被 'eval' 使用的序列化输出
-docker_app_env() {
-    cat <<"EOF"
-# Common Settings
-export ENV_DEBUG=${ENV_DEBUG:-false}
-export USER=hadoop
+app_env() {
+    cat <<-'EOF'
+		# Common Settings
+		export ENV_DEBUG=${ENV_DEBUG:-false}
+		export USER=hadoop
 
-# Paths
-export HADOOP_HOME=${APP_HOME_DIR}
-export HADOOP_MAPRED_HOME=${HADOOP_HOME}
-export HADOOP_COMMON_HOME=${HADOOP_HOME}
-export HADOOP_HDFS_HOME=${HADOOP_HOME}
-export HADOOP_YARN_HOME=${HADOOP_HOME}
-export YARN_HOME=${HADOOP_HOME}
-export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native
-export HADOOP_LIBEXEC_DIR=${HADOOP_HOME}/libexec
-export HADOOP_INSTALL=${HADOOP_HOME}
+		# Paths configuration
+		export HADOOP_HOME=${APP_HOME_DIR}
+		export HADOOP_MAPRED_HOME=${HADOOP_HOME}
+		export HADOOP_COMMON_HOME=${HADOOP_HOME}
+		export HADOOP_HDFS_HOME=${HADOOP_HOME}
+		export HADOOP_YARN_HOME=${HADOOP_HOME}
+		export YARN_HOME=${HADOOP_HOME}
+		export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native
+		export HADOOP_LIBEXEC_DIR=${HADOOP_HOME}/libexec
+		export HADOOP_INSTALL=${HADOOP_HOME}
 
-export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-${APP_CONF_DIR}}
-export HADOOP_LOG_DIR=${HADOOP_LOG_DIR:-${APP_LOG_DIR}}
+		export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-${APP_CONF_DIR}}
+		export HADOOP_LOG_DIR=${HADOOP_LOG_DIR:-${APP_LOG_DIR}}
 
-export CORE_CONF_hadoop_tmp_dir=${CORE_CONF_hadoop_tmp_dir:-${APP_DATA_DIR}/hadoop/tmp}
+		export CORE_CONF_hadoop_tmp_dir=${CORE_CONF_hadoop_tmp_dir:-${APP_DATA_DIR}/hadoop/tmp}
 
-export HDFS_CONF_dfs_namenode_name_dir=${HDFS_CONF_dfs_namenode_name_dir:-${APP_DATA_DIR}/dfs/namenode}
-export HDFS_CONF_dfs_datanode_data_dir=${HDFS_CONF_dfs_datanode_data_dir:-${APP_DATA_DIR}/dfs/datanode}
-export HDFS_CONF_dfs_journalnode_edits_dir=${HDFS_CONF_dfs_journalnode_edits_dir:-${APP_DATA_DIR}/dfs/journal}
-export YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path=${YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path:-${APP_DATA_DIR}/yarn/timeline}
-export MAPRED_CONF_mapreduce_jobhistory_done___dir=${MAPRED_CONF_mapreduce_jobhistory_done___dir:-${APP_DATA_DIR}/mapreduce/done}
-export MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir=${MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir:-${APP_DATA_DIR}/mapreduce/tmp}
+		export HDFS_CONF_dfs_namenode_name_dir=${HDFS_CONF_dfs_namenode_name_dir:-${APP_DATA_DIR}/dfs/namenode}
+		export HDFS_CONF_dfs_datanode_data_dir=${HDFS_CONF_dfs_datanode_data_dir:-${APP_DATA_DIR}/dfs/datanode}
+		export HDFS_CONF_dfs_journalnode_edits_dir=${HDFS_CONF_dfs_journalnode_edits_dir:-${APP_DATA_DIR}/dfs/journal}
+		export YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path=${YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path:-${APP_DATA_DIR}/yarn/timeline}
+		export MAPRED_CONF_mapreduce_jobhistory_done___dir=${MAPRED_CONF_mapreduce_jobhistory_done___dir:-${APP_DATA_DIR}/mapreduce/done}
+		export MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir=${MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir:-${APP_DATA_DIR}/mapreduce/tmp}
 
-export HADOOP_TMP_DIR=${CORE_CONF_hadoop_tmp_dir:-${APP_DATA_DIR}/hadoop/tmp}
-export HDFS_NAMENODE_DATA_DIR=${HDFS_CONF_dfs_namenode_name_dir:-${APP_DATA_DIR}/dfs/namenode}
-export HDFS_DATANODE_DATA_DIR=${HDFS_CONF_dfs_datanode_data_dir:-${APP_DATA_DIR}/dfs/datanode}
-export HDFS_JOURNALNODE_DATA_DIR=${HDFS_CONF_dfs_journalnode_edits_dir:-${APP_DATA_DIR}/dfs/journal}
-export YARN_TIMELINE_DATA_DIR=${YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path:-${APP_DATA_DIR}/yarn/timeline}
-export MAPRED_JOBHISTORY_DONE_DATA_DIR=${MAPRED_CONF_mapreduce_jobhistory_done___dir:-${APP_DATA_DIR}/mapreduce/done}
-export MAPRED_JOBHISTORY_TMP_DATA_DIR=${MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir:-${APP_DATA_DIR}/mapreduce/tmp}
+		export HADOOP_TMP_DIR=${CORE_CONF_hadoop_tmp_dir:-${APP_DATA_DIR}/hadoop/tmp}
+		export HDFS_NAMENODE_DATA_DIR=${HDFS_CONF_dfs_namenode_name_dir:-${APP_DATA_DIR}/dfs/namenode}
+		export HDFS_DATANODE_DATA_DIR=${HDFS_CONF_dfs_datanode_data_dir:-${APP_DATA_DIR}/dfs/datanode}
+		export HDFS_JOURNALNODE_DATA_DIR=${HDFS_CONF_dfs_journalnode_edits_dir:-${APP_DATA_DIR}/dfs/journal}
+		export YARN_TIMELINE_DATA_DIR=${YARN_CONF_yarn_timeline___service_leveldb___timeline___store_path:-${APP_DATA_DIR}/yarn/timeline}
+		export MAPRED_JOBHISTORY_DONE_DATA_DIR=${MAPRED_CONF_mapreduce_jobhistory_done___dir:-${APP_DATA_DIR}/mapreduce/done}
+		export MAPRED_JOBHISTORY_TMP_DATA_DIR=${MAPRED_CONF_mapreduce_jobhistory_intermediate___done___dir:-${APP_DATA_DIR}/mapreduce/tmp}
 
-export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native" 
+		export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native" 
 
-# Users
+		# Application settings
+		export CORE_CONF_fs_defaultFS=${CORE_CONF_fs_defaultFS:-hdfs://`hostname -f`:9000}
+		export MAPRED_CONF_mapreduce_application_classpath=${MAPRED_CONF_mapreduce_application_classpath:-${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/*:${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/lib/*}
+		export YARN_CONF_yarn_application_classpath=${YARN_CONF_yarn_application_classpath:-${HADOOP_YARN_HOME}/share/hadoop/yarn/*:${HADOOP_YARN_HOME}/share/hadoop/yarn/lib/*}
 
-# Application settings
-export CORE_CONF_fs_defaultFS=${CORE_CONF_fs_defaultFS:-hdfs://`hostname -f`:9000}
-export MAPRED_CONF_mapreduce_application_classpath=${MAPRED_CONF_mapreduce_application_classpath:-${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/*:${HADOOP_MAPRED_HOME}/share/hadoop/mapreduce/lib/*}
-export YARN_CONF_yarn_application_classpath=${YARN_CONF_yarn_application_classpath:-${HADOOP_YARN_HOME}/share/hadoop/yarn/*:${HADOOP_YARN_HOME}/share/hadoop/yarn/lib/*}
+		export MULTIHOMED_NETWORK=${MULTIHOMED_NETWORK:-1}
 
-export MULTIHOMED_NETWORK=${MULTIHOMED_NETWORK:-1}
+		# Application Cluster configuration
 
-# Application Cluster configuration
+		# JVM settings
 
-# JVM settings
-
-# Application Authentication
+		# Authentication
 
 EOF
 
@@ -414,7 +412,7 @@ app_clean_from_restart() {
 
 # 应用默认初始化操作
 # 执行完毕后，生成文件 ${APP_CONF_DIR}/.app_init_flag 及 ${APP_DATA_DIR}/.data_init_flag 文件
-docker_app_init() {
+app_default_init() {
 	app_clean_from_restart
     LOG_D "Check init status of ${APP_NAME}..."
 
@@ -454,20 +452,49 @@ docker_app_init() {
     done
 }
 
+# 用户自定义的前置初始化操作，依次执行目录 preinitdb.d 中的初始化脚本
+# 执行完毕后，生成文件 ${APP_DATA_DIR}/.custom_preinit_flag
+app_custom_preinit() {
+    LOG_D "Check custom pre-init status of ${APP_NAME}..."
+
+    # 检测用户配置文件目录是否存在 preinitdb.d 文件夹，如果存在，尝试执行目录中的初始化脚本
+    if [ -d "/srv/conf/${APP_NAME}/preinitdb.d" ]; then
+        # 检测数据存储目录是否存在已初始化标志文件；如果不存在，检索可执行脚本文件并进行初始化操作
+        if [[ -n $(find "/srv/conf/${APP_NAME}/preinitdb.d/" -type f -regex ".*\.\(sh\)") ]] && \
+            [[ ! -f "${APP_DATA_DIR}/.custom_preinit_flag" ]]; then
+            LOG_I "Process custom pre-init scripts from /srv/conf/${APP_NAME}/preinitdb.d..."
+
+            # 检索所有可执行脚本，排序后执行
+            find "/srv/conf/${APP_NAME}/preinitdb.d/" -type f -regex ".*\.\(sh\)" | sort | process_init_files
+
+            touch ${APP_DATA_DIR}/.custom_preinit_flag
+            echo "$(date '+%Y-%m-%d %H:%M:%S') : Init success." >> ${APP_DATA_DIR}/.custom_preinit_flag
+            LOG_I "Custom preinit for ${APP_NAME} complete."
+        else
+            LOG_I "Custom preinit for ${APP_NAME} already done before, skipping initialization."
+        fi
+    fi
+
+    # 检测依赖的服务是否就绪
+    #for i in ${SERVICE_PRECONDITION[@]}; do
+    #    app_wait_service "${i}"
+    #done
+}
+
 # 用户自定义的应用初始化操作，依次执行目录initdb.d中的初始化脚本
 # 执行完毕后，生成文件 ${APP_DATA_DIR}/.custom_init_flag
-docker_custom_init() {
+app_custom_init() {
     LOG_D "Check custom init status of ${APP_NAME}..."
 
     # 检测用户配置文件目录是否存在 initdb.d 文件夹，如果存在，尝试执行目录中的初始化脚本
     if [ -d "/srv/conf/${APP_NAME}/initdb.d" ]; then
     	# 检测数据存储目录是否存在已初始化标志文件；如果不存在，检索可执行脚本文件并进行初始化操作
-    	if [[ -n $(find "/srv/conf/${APP_NAME}/initdb.d/" -type f -regex ".*\.\(sh\)") ]] && \
+    	if [[ -n $(find "/srv/conf/${APP_NAME}/initdb.d/" -type f -regex ".*\.\(sh\|sql\|sql.gz\)") ]] && \
             [[ ! -f "${APP_DATA_DIR}/.custom_init_flag" ]]; then
             LOG_I "Process custom init scripts from /srv/conf/${APP_NAME}/initdb.d..."
 
             # 检索所有可执行脚本，排序后执行
-    		find "/srv/conf/${APP_NAME}/initdb.d/" -type f -regex ".*\.\(sh\)" | sort | while read -r f; do
+    		find "/srv/conf/${APP_NAME}/initdb.d/" -type f -regex ".*\.\(sh\|sql\|sql.gz\)" | sort | while read -r f; do
                 case "$f" in
                     *.sh)
                         if [[ -x "$f" ]]; then
@@ -494,3 +521,4 @@ docker_custom_init() {
 	# 绑定所有 IP ，启用远程访问
     app_enable_remote_connections
 }
+
