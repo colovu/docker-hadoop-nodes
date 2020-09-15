@@ -96,7 +96,7 @@ ENV_FILE = hadoop.env
 # 字符统计样例，统计镜像 /usr/local/license/LICENSE 文件
 wordcount-deb:
 	docker network create ${DOCKER_NETWORK} --driver bridge || true
-	docker-compose -f docker-compose-deb.yml up -d namenode datanode
+	docker-compose up -d namenode datanode
 	docker rmi hadoop-wordcount-deb || true
 	docker build -t hadoop-wordcount-deb ./submit
 	sleep 5
@@ -110,7 +110,7 @@ wordcount-deb:
 
 wordcount:
 	docker network create ${DOCKER_NETWORK} --driver bridge || true
-	docker-compose up -d namenode datanode
+	docker-compose -f docker-compose-alpine.yml up -d namenode datanode
 	docker rmi hadoop-wordcount-deb || true
 	docker build -t hadoop-wordcount ./submit
 	sleep 5
