@@ -24,9 +24,6 @@ build: build-debian build-alpine
 	@echo "Build complete"
 
 build-debian:
-	@echo "Build $(app_name):$(current_tag) and add tag: latest"
-	@docker build --force-rm $(build-arg) -t $(app_name):$(current_tag) ./hadoop
-	@docker tag $(app_name):$(current_tag) $(app_name):latest
 	@echo "Build hadoop nodes"
 	@docker build --force-rm $(build-arg) -t $(app_name)-journalnode:$(current_tag) ./journalnode
 	@docker build --force-rm $(build-arg) -t $(app_name)-datanode:$(current_tag) ./datanode
@@ -43,9 +40,6 @@ build-debian:
 	@docker tag $(app_name)-historyserver:$(current_tag) $(app_name)-historyserver:latest
 
 build-alpine:
-	@echo "Build $(app_name):$(current_tag)-alpine and add tag: latest-alpine"
-	@docker build --force-rm $(build-arg) -t $(app_name):$(current_tag)-alpine ./alpine/hadoop
-	@docker tag $(app_name):$(current_tag)-alpine $(app_name):latest-alpine
 	@echo "Build hadoop nodes"
 	@docker build --force-rm $(build-arg) -t $(app_name)-journalnode:$(current_tag)-alpine ./alpine/journalnode
 	@docker build --force-rm $(build-arg) -t $(app_name)-datanode:$(current_tag)-alpine ./alpine/datanode
@@ -94,24 +88,10 @@ DOCKER_NETWORK = back-tier
 ENV_FILE = hadoop.env
 
 # 字符统计样例，统计镜像 /usr/local/license/LICENSE 文件
-wordcount-deb:
-	docker network create ${DOCKER_NETWORK} --driver bridge || true
-	docker-compose up -d namenode datanode
-	docker rmi hadoop-wordcount-deb || true
-	docker build -t hadoop-wordcount-deb ./submit
-	sleep 5
-	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-deb "hdfs dfs -mkdir -p /input/"
-	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-deb "hdfs dfs -copyFromLocal -f /usr/local/license/LICENSE /input/"
-	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} hadoop-wordcount-deb
-	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-deb "hdfs dfs -cat /output/*"
-	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-deb "hdfs dfs -rm -r /output"
-	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-deb "hdfs dfs -rm -r /input"
-	docker-compose down
-
 wordcount:
 	docker network create ${DOCKER_NETWORK} --driver bridge || true
-	docker-compose -f docker-compose-alpine.yml up -d namenode datanode
-	docker rmi hadoop-wordcount-deb || true
+	docker-compose up -d namenode datanode
+	docker rmi hadoop-wordcount || true
 	docker build -t hadoop-wordcount ./submit
 	sleep 5
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag) "hdfs dfs -mkdir -p /input/"
@@ -122,15 +102,29 @@ wordcount:
 	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag) "hdfs dfs -rm -r /input"
 	docker-compose down
 
+wordcount-alpine:
+	docker network create ${DOCKER_NETWORK} --driver bridge || true
+	docker-compose -f docker-compose-alpine.yml up -d namenode datanode
+	docker rmi hadoop-wordcount-alpine || true
+	docker build -t hadoop-wordcount-alpine ./alpine/submit
+	sleep 5
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-alpine "hdfs dfs -mkdir -p /input/"
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-alpine "hdfs dfs -copyFromLocal -f /usr/local/license/LICENSE /input/"
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} hadoop-wordcount-alpine
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-alpine "hdfs dfs -cat /output/*"
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-alpine "hdfs dfs -rm -r /output"
+	docker run --network ${DOCKER_NETWORK} --env-file ${ENV_FILE} $(app_name):$(current_tag)-alpine "hdfs dfs -rm -r /input"
+	docker-compose down
+
 # 以 /tmp/conf 及 /tmp/data 映射并启动集群后（至少 namenode 及 datanode）
 # 
-# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest-deb hdfs dfs -mkdir -p /input/
-# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest-deb hdfs dfs -copyFromLocal -f /usr/local/license/LICENSE /input/
-# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest-deb hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar wordcount /input /output
-# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest-deb hdfs dfs -cat /output/*
-# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest-deb hdfs dfs -rm -r /output
+# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest hdfs dfs -mkdir -p /input/
+# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest hdfs dfs -copyFromLocal -f /usr/local/license/LICENSE /input/
+# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar wordcount /input /output
+# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest hdfs dfs -cat /output/*
+# docker run --network back-tier --env-file hadoop.env colovu/hadoop:latest hdfs dfs -rm -r /output
 # 
-# docker run -it --network back-tier --env-file hadoop.env colovu/hadoop:latest-deb /bin/bash
+# docker run -it --network back-tier --env-file hadoop.env colovu/hadoop:latest /bin/bash
 #   hdfs dfs -mkdir -p /input
 #   hdfs dfs -copyFromLocal /usr/local/license/LICENSE /input/
 #   cd /usr/local/hadoop/share/hadoop/mapreduce
