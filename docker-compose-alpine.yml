@@ -1,0 +1,93 @@
+version: '3.8'
+
+# 说明：
+#   - 以 '$PWD' 开头的目录（如'$PWD/conf'），为当前目录下对应的目录，供容器持久化数据存储；可以使用绝对路径；运行前需要保证目录已经存在
+#   - hadoop.env 为镜像实例化为容器时，使用的配置参数，对所有使用'env_file'指定该文件的容器有效；使用文件方式，简化启动配置信息
+#   - 使用 'port' 定义的端口，可以使用宿主机 'IP:Port' 直接访问；定义方式为 '宿主机Port:容器内Port'
+
+services:
+  namenode:
+    image: colovu/hadoop-namenode:3.2-alpine
+    hostname: namenode
+    restart: always
+    networks:
+      - back-tier
+    ports:
+      - 9870:9870
+      - 9000:9000
+    volumes:
+      - app_conf:/srv/conf
+      - app_data:/srv/data
+    environment:
+      - HADOOP_CLUSTER_NAME=colovu
+    env_file:
+      - ./hadoop.env
+
+  datanode:
+    image: colovu/hadoop-datanode:3.2-alpine
+    hostname: datanode
+    restart: always
+    networks:
+      - back-tier
+    volumes:
+      - app_conf:/srv/conf
+      - app_data:/srv/data
+    environment:
+      - SERVICE_PRECONDITION="namenode:9870"
+    env_file:
+      - ./hadoop.env
+  
+  resourcemanager:
+    image: colovu/hadoop-resourcemanager:3.2-alpine
+    container_name: resourcemanager
+    restart: always
+    networks:
+      - back-tier
+    ports:
+      - 8088:8088
+    environment:
+      - SERVICE_PRECONDITION="namenode:9000 namenode:9870 datanode:9864"
+    env_file:
+      - ./hadoop.env
+
+  nodemanager:
+    image: colovu/hadoop-nodemanager:3.2-alpine
+    container_name: nodemanager
+    restart: always
+    networks:
+      - back-tier
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+    env_file:
+      - ./hadoop.env
+  
+  historyserver:
+    image: colovu/hadoop-historyserver:3.2-alpine
+    container_name: historyserver
+    restart: always
+    networks:
+      - back-tier
+    ports:
+      - 8188:8188
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+    volumes:
+      - app_conf:/srv/conf
+      - app_data:/srv/data
+    env_file:
+      - ./hadoop.env
+
+
+networks:
+  back-tier:
+    external: true
+
+# 定义本地数据卷，由系统管理，需要手动删除
+volumes:
+  app_conf:
+    driver: local
+  app_data:
+    driver: local
+  app_datalog:
+    driver: local
+
