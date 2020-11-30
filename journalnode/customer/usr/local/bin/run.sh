@@ -4,4 +4,5 @@
 
 eval "$(app_env)"
 
+LOG_I "Start JournalNode process..."
 hdfs --config ${APP_CONF_DIR} journalnode

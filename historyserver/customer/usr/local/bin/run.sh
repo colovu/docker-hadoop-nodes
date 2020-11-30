@@ -8,4 +8,5 @@ eval "$(app_env)"
 # sbin/mr-jobhistory-daemon.sh start historyserver 
 # sbin/yarn-daemon.sh start timelineserver
 
+LOG_I "Start HistoryServer process..."
 yarn --config ${APP_CONF_DIR} historyserver

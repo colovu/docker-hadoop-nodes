@@ -4,4 +4,5 @@
 
 eval "$(app_env)"
 
+LOG_I "Start ResourceManager process..."
 yarn --config ${APP_CONF_DIR} resourcemanager

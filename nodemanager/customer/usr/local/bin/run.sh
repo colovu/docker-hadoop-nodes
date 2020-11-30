@@ -4,4 +4,5 @@
 
 eval "$(app_env)"
 
+LOG_I "Start NodeManager process..."
 yarn --config ${APP_CONF_DIR} nodemanager
