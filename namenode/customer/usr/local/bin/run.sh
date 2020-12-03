@@ -1,13 +1,12 @@
 #!/bin/bash
+# Ver: 1.1 by Endial Fang (endial@126.com)
+# 
+# 应用启动脚本
 
-. /usr/local/bin/appcommon.sh			# 应用专用函数库
+. /usr/local/bin/comm-${APP_NAME}.sh			# 应用专用函数库
 
-eval "$(app_env)"
+. /usr/local/bin/comm-env.sh 			# 设置环境变量
 
-if [ -z "${HADOOP_CLUSTER_NAME}" ]; then
-  LOG_E "Cluster name not specified"
-  exit 2
-fi
 
 if [ -e ${HDFS_NAMENODE_DATA_DIR}/lost+found ]; then
 	LOG_I "remove lost+found from ${HDFS_NAMENODE_DATA_DIR}"
