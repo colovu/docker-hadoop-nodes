@@ -18,8 +18,6 @@ services:
     volumes:
       - app_conf:/srv/conf
       - app_data:/srv/data
-    environment:
-      - HADOOP_CLUSTER_NAME=colovu
     env_file:
       - ./hadoop.env
 
