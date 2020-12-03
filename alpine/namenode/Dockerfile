@@ -7,6 +7,6 @@ HEALTHCHECK CMD wget -O- -q http://localhost:9870/ || exit 1
 
 COPY customer /
 
-EXPOSE 9000 9870
+EXPOSE 9000 9870 8020
 
 CMD ["run.sh"]

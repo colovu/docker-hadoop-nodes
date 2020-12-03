@@ -8,7 +8,7 @@
 
 **版本信息**：
 
-- 3.3、latest
+- 3.3
 - 3.2
 
 **镜像信息**
@@ -37,11 +37,16 @@ $ docker-compose up -d
 
 ### 端口
 
-- 9000：Namenode 服务监听端口
-- 9870：Namenode Web 服务端口
-- 9864：DataNode 服务监听端口
+- 8020：NameNode RPC 服务端口
+- 9000：NameNode 服务监听端口
+- 9870：NameNode Web 服务端口
 - 8088：ResourceManager Web 端口
-- 8188：HistoryManager Web 端口
+- 9864：DataNode HTTP 服务端口
+- 9866：DataNode 服务监听端口
+- 9867：DataNode IPC 服务端口
+- 8042：NodeManager 服务监听端口
+- 8485：JournalNode 服务监听端口
+- 19888（8188）：HistoryManager Web 端口
 
 ### 数据卷
 
