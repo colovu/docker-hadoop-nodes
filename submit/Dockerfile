@@ -1,6 +1,7 @@
 # Ver: 1.0 by Endial Fang (endial@126.com)
 #
-FROM colovu/hadoop:3.3
+ARG registry_url="registry.cn-shenzhen.aliyuncs.com"
+FROM ${registry_url}/colovu/hadoop:3.3
 
 COPY WordCount.jar /opt/hadoop/applications/WordCount.jar
 

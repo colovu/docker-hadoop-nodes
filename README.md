@@ -14,7 +14,7 @@
 
 **镜像信息**
 
-* 镜像地址：colovu/hadoop:3.3
+* 镜像地址：registry.cn-shenzhen.aliyuncs.com/colovu/hadoop:3.3
 
 
 

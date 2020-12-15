@@ -1,7 +1,8 @@
-# Ver: 1.6 by Endial Fang (endial@126.com)
+# Ver: 1.7 by Endial Fang (endial@126.com)
 #
 # 当前 Docker 镜像的编译脚本
 
+registry_url :=registry.cn-shenzhen.aliyuncs.com
 app_name :=colovu/hadoop
 
 # 生成镜像TAG，类似：
@@ -20,7 +21,7 @@ build-arg+=--build-arg local_url=http://$(local_ip)/dist-files
 
 .PHONY: build build-debian build-alpine clean clearclean upgrade
 
-build: build-debian build-alpine
+build: build-alpine build-debian
 	@echo "Build complete"
 
 build-debian:
@@ -67,16 +68,6 @@ clean:
 	@docker images | grep "$(app_name)-" | awk '{print $$3}' | sort -u | xargs -L 1 docker rmi -f
 	@docker images | grep "$(app_name) " | awk '{print $$3}' | sort -u | xargs -L 1 docker rmi -f
 	@docker rmi -f hadoop-wordcount || true
-
-tag:
-	@echo "Add tag: $(local_registory)/$(app_name):latest"
-	@docker tag $(app_name):latest $(local_registory)/$(app_name):latest
-
-push: tag
-	@echo "Push: $(local_registory)/$(app_name):latest"
-	@docker push $(local_registory)/$(app_name):latest
-	@echo "Push: $(app_name):latest"
-	@docker push $(app_name):latest
 
 # 更新所有 colovu 仓库的镜像 
 upgrade: 
